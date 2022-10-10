@@ -1,4 +1,4 @@
-# this assumes these resrouces exist (storage, acr, container environment)
+# this assumes some resources exist (acr, container environment)
 
 $RESOURCE_GROUP="rg-kennissessie-nov2022"
 $ENVIRONMENT="managedEnvironment-rgkennissessien-92be"
@@ -8,6 +8,7 @@ $STORAGE_ACCOUNT_NAME="sadaprstatenov2022"
 
 az login
 
+# create storage
 az storage account create `
   --name $STORAGE_ACCOUNT_NAME `
   --resource-group $RESOURCE_GROUP `
@@ -17,6 +18,7 @@ az storage account create `
 
 cd ..
 
+# deploy dapr state component using blob storage
 az containerapp env dapr-component set `
     --name $ENVIRONMENT --resource-group $RESOURCE_GROUP `
     --dapr-component-name statestore `
