@@ -1,0 +1,56 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/CounterApi/CounterApi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/CounterApi/CounterApi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/CounterApi/CounterApi.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "counter-api",
+            "appPort": 5211,
+            "label": "dapr-debug",
+            "type": "dapr",
+            "dependsOn": "build",
+            "componentsPath": "./components",
+            "grpcPort": 50001,
+            "httpPort": 55719
+        },
+        {
+            "appId": "counter-api",
+            "label": "daprd-down",
+            "type": "daprd-down"
+        }
+    ]
+}
