@@ -1,5 +1,7 @@
 using CounterApi;
+using Dapr;
 using Dapr.Client;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Dapr will send serialized event object vs. being raw CloudEvent
+app.UseCloudEvents();
+
+// needed for Dapr pub/sub routing
+app.MapSubscribeHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -31,4 +39,19 @@ app.MapPost("/count/increment", async (ICountRepository countRepository) =>
     return Results.Ok();
 });
 
+// Dapr subscription in [Topic] routes orders topic to this route
+app.MapPost("/orders", [Topic("pubsub", "counts")] async (ICountRepository countRepository, CountEvent countEvent) =>
+{
+    for (int i = 0; i < countEvent.Amount; i++)
+    {
+        await countRepository.IncrementCountAsync();
+    }
+    Console.WriteLine("Count event: " + countEvent);
+    return Results.Ok(countEvent);
+});
+
+
 app.Run();
+
+
+public record CountEvent([property: JsonPropertyName("amount")] int Amount);

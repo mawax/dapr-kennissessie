@@ -24,4 +24,10 @@ public class CountRepository : ICountRepository
     {
         return _daprClient.GetStateAsync<int>(DAPR_STORE_NAME, KEY_COUNT);
     }
+
+    public async Task IncrementCountAsync(int amount)
+    {
+        var count = await GetCountAsync();
+        await _daprClient.SaveStateAsync(DAPR_STORE_NAME, KEY_COUNT, count + amount);
+    }
 }

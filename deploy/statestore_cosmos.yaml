@@ -1,0 +1,16 @@
+componentType: state.azure.cosmosdb
+version: v1
+metadata:
+- name: url
+  value: https://cos-kennissessie.documents.azure.com:443/
+- name: masterKey
+  secretRef: master-key 
+- name: database
+  value: countdb
+- name: collection
+  value: countcontainer
+secrets:
+- name: master-key
+  value: <master-key-here>
+scopes:
+- counter-api

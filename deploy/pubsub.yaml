@@ -1,0 +1,12 @@
+# https://docs.dapr.io/reference/components-reference/supported-pubsub/setup-azure-servicebus/
+componentType: pubsub.azure.servicebus
+version: v1
+metadata:
+- name: connectionString # Required when not using Azure Authentication.
+  secretRef: con-string
+secrets:
+- name: con-string
+  value: <connection-string-here->
+scopes:
+- counter-api
+- counter-frontend

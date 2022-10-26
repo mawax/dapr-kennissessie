@@ -1,4 +1,4 @@
-# statestore.yaml for Azure Blob storage component
+# statestore.yaml for Azure Blob storage component: https://learn.microsoft.com/en-us/azure/container-apps/microservices-dapr?tabs=bash#configure-the-state-store-component
 componentType: state.azure.blobstorage
 version: v1
 metadata:

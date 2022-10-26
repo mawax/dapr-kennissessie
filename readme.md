@@ -28,3 +28,7 @@ browse to: http://localhost:5222/
 
 # Deployment
 See ./deploy/
+
+
+# Dapr limitations on Container apps
+https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview?tabs=bicep1%2Cyaml#unsupported-dapr-capabilities

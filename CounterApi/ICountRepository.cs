@@ -4,5 +4,6 @@
     {
         Task<int> GetCountAsync();
         Task IncrementCountAsync();
+        Task IncrementCountAsync(int amount);
     }
 }
