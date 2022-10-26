@@ -42,10 +42,7 @@ app.MapPost("/count/increment", async (ICountRepository countRepository) =>
 // Dapr subscription in [Topic] routes orders topic to this route
 app.MapPost("/orders", [Topic("pubsub", "counts")] async (ICountRepository countRepository, CountEvent countEvent) =>
 {
-    for (int i = 0; i < countEvent.Amount; i++)
-    {
-        await countRepository.IncrementCountAsync();
-    }
+    await countRepository.IncrementCountAsync(countEvent.Amount);
     Console.WriteLine("Count event: " + countEvent);
     return Results.Ok(countEvent);
 });
