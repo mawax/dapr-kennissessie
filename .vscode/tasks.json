@@ -14,6 +14,18 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "buildfrontend",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/CounterFrontend/CounterFrontend.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "publish",
             "command": "dotnet",
             "type": "process",
@@ -50,6 +62,21 @@
         {
             "appId": "counter-api",
             "label": "daprd-down",
+            "type": "daprd-down"
+        },
+        {
+            "appId": "frontend",
+            "appPort": 5222,
+            "label": "dapr-debug-1",
+            "type": "dapr",
+            "dependsOn": "buildfrontend",
+            "componentsPath": "./components",
+            "grpcPort": 50002,
+            "httpPort": 55720
+        },
+        {
+            "appId": "frontend",
+            "label": "daprd-down-1",
             "type": "daprd-down"
         }
     ]

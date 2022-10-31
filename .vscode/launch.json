@@ -1,9 +1,28 @@
 {
     "version": "0.2.0",
     "configurations": [
-        
         {
-            "name": ".NET Core Launch (web)",
+            "name": ".NET Core Launch (web) CounterFrontend",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/CounterFrontend/bin/Debug/net6.0/CounterFrontend.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/CounterFrontend",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": ".NET Core Launch (web) CounterApi",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -28,7 +47,7 @@
             "request": "attach"
         },
         {
-            "name": ".NET Core Launch (web) with Dapr",
+            "name": ".NET Core Launch (web) CounterApi with Dapr",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "dapr-debug",
@@ -47,6 +66,34 @@
                 "/Views": "${workspaceFolder}/Views"
             },
             "postDebugTask": "daprd-down"
+        },
+        {
+            "name": ".NET Core Launch (web) CounterFrontend with Dapr",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "dapr-debug-1",
+            "program": "${workspaceFolder}/CounterFrontend/bin/Debug/net6.0/CounterFrontend.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/CounterFrontend",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "DAPR_HTTP_PORT": "55720",
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+            "postDebugTask": "daprd-down-1"
         }
-    ]
+    ],
+    "compounds": [
+        {
+          "name": "Dapr counter frontend and api",
+          "configurations": [".NET Core Launch (web) CounterApi with Dapr",".NET Core Launch (web) CounterFrontend with Dapr"]
+        }
+      ]
 }
