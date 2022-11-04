@@ -15,21 +15,20 @@ az storage account create `
   --location "$LOCATION" `
   --sku Standard_RAGRS `
   --kind StorageV2
-
-cd ..
-
 # deploy dapr state component using blob storage
 az containerapp env dapr-component set `
     --name $ENVIRONMENT --resource-group $RESOURCE_GROUP `
     --dapr-component-name statestore `
     --yaml ./deploy/statestore.yaml
 
+
+# deploy dapr pubsub component using servicebus
 az containerapp env dapr-component set `
     --name $ENVIRONMENT --resource-group $RESOURCE_GROUP `
     --dapr-component-name pubsub `
     --yaml pubsub.yaml
 
-# 
+# deploy dapr state component using cosmosdb
 az containerapp env dapr-component set `
     --name $ENVIRONMENT --resource-group $RESOURCE_GROUP `
     --dapr-component-name statestore `
@@ -40,7 +39,7 @@ az containerapp env dapr-component set `
 # API
 
 
-az acr build --registry $ACR_NAME --image counter-api:latest . -f .\CounterApi\Dockerfile
+az acr build --registry $ACR_NAME --image counter-api:1.0.2 . -f .\CounterApi\Dockerfile
 
 az containerapp create `
   --name 'counter-api' `
@@ -55,21 +54,9 @@ az containerapp create `
   --enable-dapr `
   --dapr-app-port 80 
 
-# Error: No credential was provided to access Azure Container Registry. Trying to look up credentials...
-# Failed to retrieve credentials for container registry acrkennissessie. Please provide the registry username and password
-# Fix: enable admin credentials
-
-# not working
-az containerapp update -n counter-api -g $RESOURCE_GROUP --image $ACR_NAME.azurecr.io/counter-api:latest
-
-az containerapp revision copy `
--n counter-api `
--g $RESOURCE_GROUP `
--i "$ACR_NAME.azurecr.io/counter-api:1.0.2"
-
 
 # frontend
-az acr build --registry $ACR_NAME --image counter-frontend:latest . -f .\CounterFrontend\Dockerfile
+az acr build --registry $ACR_NAME --image counter-frontend:1.0.2 . -f .\CounterFrontend\Dockerfile
 
 az containerapp create `
   --name 'counter-frontend' `
@@ -85,25 +72,11 @@ az containerapp create `
   --dapr-app-port 80
 
 
-# Update is not yet working, no way to specify registry server
-# Seems it worked last year: https://oksala.net/2021/11/06/deploy-azure-container-app-from-azure-devops/
-az containerapp update `
-  -n counter-frontend `
-  -g $RESOURCE_GROUP `
-  --image $ACR_NAME.azurecr.io/counter-frontend:1.0.2 
-  #--registry-server "$ACR_NAME.azurecr.io"
-
-  az containerapp update `
-  -n counter-frontend `
-  -g $RESOURCE_GROUP `
-  --image $ACR_NAME.azurecr.io/counter-frontend:1.0.2 
-  #--registry-server "$ACR_NAME.azurecr.io"
-
   #alternative:
   az containerapp revision copy `
      -n counter-frontend `
      -g $RESOURCE_GROUP `
-     -i "$ACR_NAME.azurecr.io/counter-frontend:1.0.2"
+     -i "$ACR_NAME.azurecr.io/counter-frontend:1.0.3"
 
 
 # issues with blue/green deployments
@@ -111,3 +84,26 @@ https://github.com/microsoft/azure-container-apps/issues/244
 
 
 
+
+
+# Issues:
+# Error: No credential was provided to access Azure Container Registry. Trying to look up credentials...
+# Failed to retrieve credentials for container registry acrkennissessie. Please provide the registry username and password
+# Fix: enable admin credentials
+
+# not working
+az containerapp update -n counter-api -g $RESOURCE_GROUP --image $ACR_NAME.azurecr.io/counter-api:1.02
+
+az containerapp revision copy `
+-n counter-api `
+-g $RESOURCE_GROUP `
+-i "$ACR_NAME.azurecr.io/counter-api:1.0.2"
+
+
+# Update is not yet working, no way to specify registry server
+# Seems it worked last year: https://oksala.net/2021/11/06/deploy-azure-container-app-from-azure-devops/
+az containerapp update `
+  -n counter-frontend `
+  -g $RESOURCE_GROUP `
+  --image $ACR_NAME.azurecr.io/counter-frontend:1.0.2 
+  #--registry-server "$ACR_NAME.azurecr.io"

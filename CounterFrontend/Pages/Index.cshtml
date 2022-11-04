@@ -5,10 +5,17 @@
 }
 
 <div class="text-center">
-    Current count
-    <h1 class="display-4">@Model.Count</h1>    
+    Current count:
+    <h1 class="display-4">@Model.Count</h1>
+    <p>
+    things    
+    </p>
 
-    <form method="post">        
-        <input type="submit" title="Increment" />
+    <form method="post">
+        <input asp-page-handler="WithHttpClient" type="submit" value="Increment count using HTTP Client" />
+    </form>
+
+    <form method="post">
+        <input asp-page-handler="WithDaprClient" type="submit" value="Increment count using Dapr Client" />
     </form>
 </div>
